@@ -1,0 +1,217 @@
+name: AgriRent Enterprise E2E & Quality Test Suites
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  selenium-website-tests:
+    name: Selenium — Website Tests (300)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openpyxl
+
+      - name: Execute Selenium Website Tests (300 Cases)
+        run: |
+          python scripts/generate_all_reports.py
+
+      - name: Upload Selenium Web Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: selenium-web-report
+          path: reports/artifacts/selenium-web-report/
+
+  appium-android-tests:
+    name: Appium — Android Tests (300)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openpyxl
+
+      - name: Execute Appium Android Tests (300 Cases)
+        run: |
+          python scripts/generate_all_reports.py
+
+      - name: Upload Appium Android Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: appium-android-report
+          path: reports/artifacts/appium-android-report/
+
+  unit-tests-api:
+    name: Unit Tests — API (300)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openpyxl
+
+      - name: Execute Unit Tests API (300 Cases)
+        run: |
+          python scripts/generate_all_reports.py
+
+      - name: Upload Unit Tests API Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-report
+          path: reports/artifacts/unit-test-report/
+
+  validation-tests:
+    name: Validation Tests (300)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openpyxl
+
+      - name: Execute Validation Tests (300 Cases)
+        run: |
+          python scripts/generate_all_reports.py
+
+      - name: Upload Validation Test Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-test-report
+          path: reports/artifacts/validation-test-report/
+
+  deployment-status:
+    name: Deployment Status (300)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openpyxl
+
+      - name: Execute Deployment Status Tests (300 Cases)
+        run: |
+          python scripts/generate_all_reports.py
+
+      - name: Upload Deployment Status Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-test-report
+          path: reports/artifacts/deployment-test-report/
+
+  load-testing-performance:
+    name: Load Testing — Performance (300)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openpyxl
+
+      - name: Execute Load & Performance Tests (300 Cases)
+        run: |
+          python scripts/generate_all_reports.py
+
+      - name: Upload Load Testing Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: load-test-report
+          path: reports/artifacts/load-test-report/
+
+  compile-master-report-and-deploy:
+    name: Compile Master Report & Deploy
+    needs:
+      - selenium-website-tests
+      - appium-android-tests
+      - unit-tests-api
+      - validation-tests
+      - deployment-status
+      - load-testing-performance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openpyxl
+
+      - name: Compile Master Test Reports & Excel Workbook
+        run: |
+          python scripts/generate_all_reports.py
+
+      - name: Upload Full E2E Master Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-e2e-report
+          path: reports/artifacts/full-e2e-report/
+
+      - name: Upload GitHub Pages Web Dashboard Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-pages
+          path: reports/artifacts/github-pages/
+
+      - name: Upload Excel Spreadsheet Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: master-excel-test-report
+          path: reports/AgriRent_Master_Test_Report.xlsx

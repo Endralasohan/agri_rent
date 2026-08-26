@@ -1,0 +1,9 @@
+{
+  "name": "AgriRent",
+  "displayName": "AgriRent",
+  "extra": {
+    "eas": {
+      "projectId": "3d9406cc-ef7c-4b4e-8b6f-b711b897e9e2"
+    }
+  }
+}
